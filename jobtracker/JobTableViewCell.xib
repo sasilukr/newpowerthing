@@ -44,7 +44,7 @@
                 <outlet property="customerNameLabel" destination="fP5-6E-CFD" id="ST8-2c-FDP"/>
                 <outlet property="deadlineLabel" destination="IJT-qe-yrm" id="IQH-o7-UPw"/>
                 <outlet property="priceLabel" destination="h8i-1Y-K2l" id="cuz-u3-EQY"/>
-                <outlet property="statusLabel" destination="IJT-qe-yrm" id="WBm-S4-mUO"/>
+                <outlet property="statusLabel" destination="hAC-54-0Uf" id="NVs-Ko-6YB"/>
             </connections>
             <point key="canvasLocation" x="-110.5" y="295.5"/>
         </tableViewCell>

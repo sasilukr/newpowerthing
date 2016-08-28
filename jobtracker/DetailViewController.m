@@ -5,16 +5,16 @@
 //  Created by Sasi Ruangrongsorakai on 8/27/16.
 //  Copyright © 2016 com.sasiluk. All rights reserved.
 //
-
+#import <AVFoundation/AVAudioPlayer.h>
+#import <AudioToolbox/AudioToolbox.h>
 #import <AFNetworking/AFNetworking.h>
 #import "DetailViewController.h"
-
+#import "MyPubNub.h"
 @interface DetailViewController ()
 
 @end
 
 @implementation DetailViewController
-
 
 #pragma mark - Managing the detail item
 
@@ -49,8 +49,49 @@
     }
 }
 
+- (void)client:(PubNub *)client didReceiveMessage:(PNMessageResult*)message {
+    NSLog(@"%s - PubNub Message received %@", __FUNCTION__, message);
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"CHA-CHING"
+                                                    message:@"You just got paid!"
+                                                   delegate:self
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+//    SystemSoundID mBeep;
+//    NSString* path = [[NSBundle mainBundle]
+//                      pathForResource:@"Beep" ofType:@"aiff"];
+//    NSURL* url = [NSURL fileURLWithPath:path];
+//    AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &mBeep);
+//    // Play the sound
+//    AudioServicesPlaySystemSound(mBeep);
+//    
+//    // Dispose of the sound
+//    AudioServicesDisposeSystemSoundID(mBeep);
+//
+    [alert show];
+    
+    NSDictionary *messageObject = [[[message data] message] objectForKey:@"data"];
+    NSNumber *customerId = [messageObject objectForKey:@"customerId"];
+    NSString *status = [messageObject objectForKey:@"status"];
+    
+    if ([self.detailItem customerId] == [customerId integerValue]) {
+        
+        int selectedIndex = 3;
+        if ([status isEqualToString:@"omw"]) {
+            selectedIndex = 0;
+        } else if ([status isEqualToString:@"started"]) {
+            selectedIndex = 1;
+        } else if ([status isEqualToString:@"finished"]) {
+            selectedIndex = 2;
+        }
+        [self.statusSegmentedControl setSelectedSegmentIndex:selectedIndex];
+    }
+    
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[[MyPubNub shared] pubnub] addListener:self];
     // Do any additional setup after loading the view, typically from a nib.
     [self configureView];
 }

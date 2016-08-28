@@ -8,13 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-#import <Foundation/Foundation.h>
 #import <PubNub/PubNub.h>
+#import <Foundation/Foundation.h>
+#import "MyPubNub.h"
 @class DetailViewController;
 
-@interface MasterViewController : UITableViewController <PNObjectEventListener, PNObjectEventListener>
+@interface MasterViewController : UITableViewController <PNObjectEventListener>
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
+
 
 @end
 

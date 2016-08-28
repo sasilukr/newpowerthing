@@ -10,6 +10,7 @@
 
 @interface Job : NSObject
 
+@property NSInteger customerId;
 @property NSString *customerName;
 @property NSString *status;
 @property NSString *price;

@@ -5,11 +5,11 @@
 //  Created by Sasi Ruangrongsorakai on 8/27/16.
 //  Copyright © 2016 com.sasiluk. All rights reserved.
 //
-
+#import <PubNub/PubNub.h>
 #import <UIKit/UIKit.h>
 #import "Job.h"
 
-@interface DetailViewController : UIViewController
+@interface DetailViewController : UIViewController <PNObjectEventListener>
 
 @property (strong, nonatomic) Job *detailItem;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *statusSegmentedControl;

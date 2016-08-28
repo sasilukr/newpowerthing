@@ -20,6 +20,7 @@
 		5E958F021D72706300F3DA4A /* JobTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E958F011D72706300F3DA4A /* JobTableViewCell.m */; };
 		5E958F051D727B4800F3DA4A /* PrototypeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E958F041D727B4800F3DA4A /* PrototypeTableViewCell.m */; };
 		5E98CE9F1D72AE9E003A6422 /* SharedClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E98CE9E1D72AE9E003A6422 /* SharedClient.m */; };
+		5E98CEA21D73044D003A6422 /* MyPubNub.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E98CEA11D73044D003A6422 /* MyPubNub.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,8 @@
 		5E958F041D727B4800F3DA4A /* PrototypeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrototypeTableViewCell.m; sourceTree = "<group>"; };
 		5E98CE9D1D72AE9E003A6422 /* SharedClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedClient.h; sourceTree = "<group>"; };
 		5E98CE9E1D72AE9E003A6422 /* SharedClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedClient.m; sourceTree = "<group>"; };
+		5E98CEA01D73044D003A6422 /* MyPubNub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPubNub.h; sourceTree = "<group>"; };
+		5E98CEA11D73044D003A6422 /* MyPubNub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPubNub.m; sourceTree = "<group>"; };
 		6E03DA9F8591A46079065019 /* Pods-jobtracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-jobtracker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-jobtracker/Pods-jobtracker.debug.xcconfig"; sourceTree = "<group>"; };
 		B0E452C7E92AD0250FE42464 /* libPods-jobtracker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-jobtracker.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19DE812FFC4C3F762A82A27 /* Pods-jobtracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-jobtracker.release.xcconfig"; path = "Pods/Target Support Files/Pods-jobtracker/Pods-jobtracker.release.xcconfig"; sourceTree = "<group>"; };
@@ -102,6 +105,8 @@
 				5E958F041D727B4800F3DA4A /* PrototypeTableViewCell.m */,
 				5E98CE9D1D72AE9E003A6422 /* SharedClient.h */,
 				5E98CE9E1D72AE9E003A6422 /* SharedClient.m */,
+				5E98CEA01D73044D003A6422 /* MyPubNub.h */,
+				5E98CEA11D73044D003A6422 /* MyPubNub.m */,
 			);
 			path = jobtracker;
 			sourceTree = "<group>";
@@ -267,6 +272,7 @@
 				5E958EE91D7269CA00F3DA4A /* DetailViewController.m in Sources */,
 				5E958F021D72706300F3DA4A /* JobTableViewCell.m in Sources */,
 				5E98CE9F1D72AE9E003A6422 /* SharedClient.m in Sources */,
+				5E98CEA21D73044D003A6422 /* MyPubNub.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

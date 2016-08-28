@@ -17,7 +17,6 @@
 
 @interface MasterViewController ()
 
-@property (nonatomic) PubNub *pubnub;
 
 @property BOOL isConnected;
 
@@ -53,6 +52,7 @@
     self.objects = [[NSMutableArray alloc] init];
     
     Job *job1 = [[Job alloc] init];
+    job1.customerId = 1;
     job1.customerName = @"Name 1";
     job1.price = @"100.00";
     job1.status = @"omw";
@@ -61,6 +61,7 @@
     
     
     Job *job2 = [[Job alloc] init];
+    job2.customerId = 2;
     job2.customerName = @"Name 2";
     job2.price = @"200.00";
     job2.status = @"started";
@@ -69,6 +70,7 @@
     
     
     Job *job3 = [[Job alloc] init];
+    job3.customerId = 3;
     job3.customerName = @"Name 3";
     job3.price = @"300.00";
     job3.status = @"finished";
@@ -112,7 +114,7 @@
 - (void)disconnect
 {
     [self setDisconnectState];
-    [self.pubnub removeListener:self];
+    [[[MyPubNub shared] pubnub] removeListener:self];
    // [[NSNotificationCenter defaultCenter] postNotificationName:LVPubNubDisconnected object:nil];
 }
 
@@ -130,16 +132,17 @@
     configuration.uuid = [appDelegate.devicePushToken isEqualToString:@"unknownDeviceToken"]? nil : appDelegate.devicePushToken;
 
     
-    self.pubnub = [PubNub clientWithConfiguration:configuration];
-    [self.pubnub addListener:self];
-    [self.pubnub timeWithCompletion:^(PNResult *result, PNStatus *status) {
+    [[MyPubNub shared] setPubnub:[PubNub clientWithConfiguration:configuration]];
+    [[[MyPubNub shared] pubnub]  addListener:self];
+    [[[MyPubNub shared] pubnub]  timeWithCompletion:^(PNResult *result, PNStatus *status) {
         
         if (!status || !status.isError) {
-            NSLog(@"%s - SUCCESS: PubNub Config UUID %@",__FUNCTION__, [self.pubnub uuid]);
+            NSLog(@"%s - SUCCESS: PubNub Config UUID %@",__FUNCTION__, [[[MyPubNub shared] pubnub] uuid]);
             self.isConnected = YES;
             // Because Pubnub opens a socket connection we decrement the total number of connections by 1 so
             // we dont always have a spinner showing in the corner
             [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
+                    [[[MyPubNub shared] pubnub] subscribeToChannels:@[@"jobtracker"] withPresence:NO];
            // [[NSNotificationCenter defaultCenter] postNotificationName:LVPubNubConnected object:nil];
         } else {
             NSLog(@"%s - ERROR: PubNub Connection Failed! %@",__FUNCTION__, status);
@@ -163,7 +166,7 @@
                 //[[NSNotificationCenter defaultCenter] postNotificationName:LVPubNubSubscribedToGroupChannel object:nil];
             } else {
                 
-                [self.pubnub subscribeToChannels:@[@"jobtracker"] withPresence:NO];
+//                [self.pubnub subscribeToChannels:@[@"jobtracker"] withPresence:NO];
                 //[[NSNotificationCenter defaultCenter] postNotificationName:LVPubNubSubscribedToChannel object:nil];
             }
         }
@@ -191,6 +194,18 @@
 
 - (void)client:(PubNub *)client didReceiveMessage:(PNMessageResult*)message {
     NSLog(@"%s - PubNub Message received %@", __FUNCTION__, message);
+    NSDictionary *messageObject = [[[message data] message] objectForKey:@"data"];
+    NSNumber *customerId = [messageObject objectForKey:@"customerId"];
+    NSString *status = [messageObject objectForKey:@"status"];
+    
+    for (Job* j in self.objects) {
+        if ([j customerId] == [customerId integerValue]) {
+            j.status = status;
+            break;
+        }
+    }
+    
+    [self.tableView reloadData];
 }
 
 
