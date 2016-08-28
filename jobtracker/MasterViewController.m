@@ -37,6 +37,11 @@
                           selector:@selector(startPubNub)
                               name:@"ApplicationDidReceiveDeviceTokenEvent"
                             object:nil];
+        
+        [defaultCenter addObserver:self
+                          selector:@selector(updateStatus:)
+                              name:@"TrackingStatusUpdated"
+                            object:nil];
     });
 
     
@@ -95,6 +100,17 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)updateStatus:(NSNotification *)notification {
+    
+    Job *updatedJob = [notification object];
+    for (Job *j in self.objects) {
+        if (j.customerId == updatedJob.customerId) {
+            j.status = updatedJob.status;
+            break;
+        }
+    }
+    [self.tableView reloadData];
+}
 #pragma mark - PubNub
 
 - (void)startPubNub {

@@ -102,15 +102,23 @@
 }
 
 - (IBAction)updateStatus:(id)sender {
-    
     NSInteger selectedSegment = self.statusSegmentedControl.selectedSegmentIndex;
-    
+
     if (selectedSegment == 0) {
         NSLog(@"Select On The Way");
+        self.detailItem.status = @"omw";
         [self sendSms];
-    } else if (selectedSegment == 1){
+    } else if (selectedSegment == 1) {
+        self.detailItem.status = @"started";
         NSLog(@"Select Started");
+    } else if (selectedSegment == 2) {
+        self.detailItem.status = @"finished";
+    } else if (selectedSegment == 3) {
+        self.detailItem.status = @"paid";
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TrackingStatusUpdated" object:self.detailItem];
+    
 }
 
 - (void)sendSms {
