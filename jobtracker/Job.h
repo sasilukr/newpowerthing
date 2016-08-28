@@ -12,8 +12,12 @@
 
 @property NSInteger customerId;
 @property NSString *customerName;
-@property NSString *status;
-@property NSString *price;
-@property NSDate *deadline;
+@property NSString *address1;
+@property NSString *address2;
+@property NSString *phone;
 @property NSString *task;
+@property NSString *price;
+@property NSString *status;
+@property NSString *buttonText;
+@property NSInteger statusCode;
 @end

@@ -11,6 +11,10 @@
 #import "DetailViewController.h"
 #import "MyPubNub.h"
 @interface DetailViewController ()
+@property NSMutableArray *historyList;
+@property NSMutableArray *currentHistoryList;
+@property NSMutableArray *buttonStatusList;
+@property NSMutableArray *textStatusList;
 
 @end
 
@@ -18,10 +22,47 @@
 
 #pragma mark - Managing the detail item
 
+
 - (void)setDetailItem:(Job *)newDetailItem {
     if (_detailItem != newDetailItem) {
         
         _detailItem = newDetailItem;
+        
+        
+        
+        [self.historyTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"StatusHistoryViewCell"];
+        
+        self.historyList = [[NSMutableArray alloc] init];
+        [self.historyList addObject:@"Inspection Scheduled 8/27"];
+        [self.historyList addObject:@"Inspection Completed 8/28"];
+        [self.historyList addObject:@"Service Scheduled 8/28"];
+        [self.historyList addObject:@"Servicer en Route"];
+        [self.historyList addObject:@"Service Begun 8/28"];
+        [self.historyList addObject:@"Service Completed 8/28"];
+        [self.historyList addObject:@"Bill Paid! 8/28"];
+        [self.historyList addObject:@"Yay! Another happy customer!"];
+
+        self.buttonStatusList = [[NSMutableArray alloc] init];
+        [self.buttonStatusList addObject:@"Hit the Road"];
+        [self.buttonStatusList addObject:@"Hit the Road"];
+        [self.buttonStatusList addObject:@"Hit the Road"];
+        [self.buttonStatusList addObject:@"Hit the Road"];
+        [self.buttonStatusList addObject:@"I'm here!"];
+        [self.buttonStatusList addObject:@"All done!"];
+        [self.buttonStatusList addObject:@"Bill Reminder"];
+        [self.buttonStatusList addObject:@":)"];
+
+        
+        self.textStatusList = [[NSMutableArray alloc] init];
+        [self.textStatusList addObject:@"Status Text"];
+        [self.textStatusList addObject:@"Status Text"];
+        [self.textStatusList addObject:@"Status Text"];
+        [self.textStatusList addObject:@"Appt This Morning"];
+        [self.textStatusList addObject:@"On The Way"];
+        [self.textStatusList addObject:@"On The Job"];
+        [self.textStatusList addObject:@"Time to Get Paid"];
+        [self.textStatusList addObject:@"Yay! Another happy customer!"];
+
         
         // Update the view.
         [self configureView];
@@ -32,20 +73,27 @@
     // Update the user interface for the detail item.
     if (self.detailItem) {
         self.title = [self.detailItem customerName];
-        int selectedIndex = 3;
-        if ([[self.detailItem status] isEqualToString:@"omw"]) {
-            selectedIndex = 0;
-        } else if ([[self.detailItem status] isEqualToString:@"started"]) {
-            selectedIndex = 1;
-        } else if ([[self.detailItem status] isEqualToString:@"finished"]) {
-            selectedIndex = 2;
+        
+        [self.statusButton setTitle:[self.buttonStatusList objectAtIndex:self.detailItem.statusCode] forState:UIControlStateNormal];
+
+        self.statusButton.backgroundColor = [UIColor colorWithRed:1 green:.73 blue:.15 alpha:1.0];
+        self.statusButton.tintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1.0];
+        self.statusLabel.text = [self.textStatusList objectAtIndex:self.detailItem.statusCode];
+        self.currentHistoryList = [[NSMutableArray alloc] init];
+        for (int i = 0 ; i < self.detailItem.statusCode ; i++) {
+            [self.currentHistoryList addObject:[self.historyList objectAtIndex:i]];
         }
-        [self.statusSegmentedControl setSelectedSegmentIndex:selectedIndex];
+        
+        [self.historyTableView reloadData];
         
         self.customerNameLabel.text = [self.detailItem customerName];
-        self.priceLabel.text = [self.detailItem price];
+        self.address1Label.text = [self.detailItem address1];
+        self.address2Label.text = [self.detailItem address2];
+        self.phoneLabel.text = [self.detailItem phone];
         self.taskLabel.text = [self.detailItem task];
-        self.deadlineLabel.text = @"Today";
+        self.priceLabel.text = [self.detailItem price];
+        self.statusLabel.text = [self.detailItem status];
+        
     }
 }
 
@@ -56,34 +104,25 @@
                                                    delegate:self
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
-//    SystemSoundID mBeep;
-//    NSString* path = [[NSBundle mainBundle]
-//                      pathForResource:@"Beep" ofType:@"aiff"];
-//    NSURL* url = [NSURL fileURLWithPath:path];
-//    AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &mBeep);
-//    // Play the sound
-//    AudioServicesPlaySystemSound(mBeep);
-//    
-//    // Dispose of the sound
-//    AudioServicesDisposeSystemSoundID(mBeep);
-//
     [alert show];
     
     NSDictionary *messageObject = [[[message data] message] objectForKey:@"data"];
     NSNumber *customerId = [messageObject objectForKey:@"customerId"];
     NSString *status = [messageObject objectForKey:@"status"];
     
-    if ([self.detailItem customerId] == [customerId integerValue]) {
+    if ([self.detailItem customerId] == 1) {
         
-        int selectedIndex = 3;
-        if ([status isEqualToString:@"omw"]) {
-            selectedIndex = 0;
-        } else if ([status isEqualToString:@"started"]) {
-            selectedIndex = 1;
-        } else if ([status isEqualToString:@"finished"]) {
-            selectedIndex = 2;
-        }
-        [self.statusSegmentedControl setSelectedSegmentIndex:selectedIndex];
+        self.detailItem.statusCode = self.detailItem.statusCode+1;
+        self.statusLabel.text = [self.textStatusList objectAtIndex:self.detailItem.statusCode];
+        [self.currentHistoryList addObject:[self.historyList objectAtIndex:self.detailItem.statusCode-1]];
+        [self.statusButton setTitle:[self.buttonStatusList objectAtIndex:self.detailItem.statusCode] forState:UIControlStateNormal];
+        self.statusButton.backgroundColor = [UIColor colorWithRed:1 green:.73 blue:.15 alpha:1.0];
+        self.statusButton.tintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1.0];
+        
+        [self.historyTableView reloadData];
+        
+        self.detailItem.status = [self.textStatusList objectAtIndex:self.detailItem.statusCode];
+
     }
     
     
@@ -92,9 +131,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[[MyPubNub shared] pubnub] addListener:self];
-    // Do any additional setup after loading the view, typically from a nib.
+    
     [self configureView];
 }
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -102,26 +143,26 @@
 }
 
 - (IBAction)updateStatus:(id)sender {
-    NSInteger selectedSegment = self.statusSegmentedControl.selectedSegmentIndex;
 
-    if (selectedSegment == 0) {
-        NSLog(@"Select On The Way");
-        self.detailItem.status = @"omw";
-        [self sendSms];
-    } else if (selectedSegment == 1) {
-        self.detailItem.status = @"started";
-        NSLog(@"Select Started");
-    } else if (selectedSegment == 2) {
-        self.detailItem.status = @"finished";
-    } else if (selectedSegment == 3) {
-        self.detailItem.status = @"paid";
-    }
     
+    self.detailItem.statusCode = self.detailItem.statusCode+1;
+    self.statusLabel.text = [self.textStatusList objectAtIndex:self.detailItem.statusCode];
+    [self.currentHistoryList addObject:[self.historyList objectAtIndex:self.detailItem.statusCode-1]];
+    [self.statusButton setTitle:[self.buttonStatusList objectAtIndex:self.detailItem.statusCode] forState:UIControlStateNormal];
+    self.statusButton.backgroundColor = [UIColor colorWithRed:1 green:.73 blue:.15 alpha:1.0];
+    self.statusButton.tintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1.0];
+    
+    [self.historyTableView reloadData];
+
+    
+    [self sendSms:self.detailItem.statusCode];
+    self.detailItem.status = [self.textStatusList objectAtIndex:self.detailItem.statusCode];
+
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TrackingStatusUpdated" object:self.detailItem];
     
 }
 
-- (void)sendSms {
+- (void)sendSms:(NSInteger) step {
 
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
@@ -135,16 +176,69 @@
     
     manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"application/json"];
     
+    NSString *textMessage = @"Blah";
+    switch(step) {
+        case 4:
+            textMessage = @"On my way! http://bit.ly/2bPkB6S";
+            break;
+        case 5:
+            textMessage = @"Getting started! http://bit.ly/2bZn4KZ";
+            break;
+        case 6:
+            textMessage = @"All done! Pay me! http://bit.ly/2c6tMS2";
+            break;
+        
+    }
     
-    NSDictionary *params = @{@"From": @"+18056182783",
-                             @"To": @"+18057085558",
-                             @"Body": @"Boring test message"};
-    [manager POST:@"https://api.twilio.com/2010-04-01/Accounts/ACa81ee702388f927504bc037f1b93b9cf/Messages.json"
-       parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"JSON: %@", responseObject);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
-    }];
-    
+    if (step == 6 || step == 4 || step == 5) {
+        
+        NSDictionary *params = @{@"From": @"+18056182783",
+                                 @"To": @"+18057085558",
+                                 @"Body": textMessage};
+        [manager POST:@"https://api.twilio.com/2010-04-01/Accounts/ACa81ee702388f927504bc037f1b93b9cf/Messages.json"
+           parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+               NSLog(@"JSON: %@", responseObject);
+           } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+               NSLog(@"Error: %@", error);
+           }];
+    }
 }
+
+#pragma mark - Table View
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.currentHistoryList.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSString *historyObject = self.currentHistoryList[indexPath.row];
+    
+    static NSString *jobTableIdentifier = @"StatusHistoryViewCell";
+    
+    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:jobTableIdentifier];
+    
+    if (cell == nil)
+    {
+//        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"JobTableViewCell" owner:nil options:nil];
+//        cell = [nib objectAtIndex:0];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                       reuseIdentifier:jobTableIdentifier];
+    }
+    cell.backgroundColor = [UIColor clearColor];
+    cell.textLabel.text = historyObject;
+    
+    return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+
+
 @end

@@ -58,33 +58,79 @@
     
     Job *job1 = [[Job alloc] init];
     job1.customerId = 1;
-    job1.customerName = @"Name 1";
-    job1.price = @"100.00";
-    job1.status = @"omw";
-    job1.deadline = [NSDate date];
+    job1.customerName = @"Tiffany Lee";
+    job1.address1 = @"8 Octavia Street";
+    job1.address2 = @"San Francisco, CA 94102";
+    job1.phone = @"415-708-8885";
     job1.task = @"Kitchen sink";
-    
+    job1.price = @"$290.00";
+    job1.status = @"Appt This Morning";
+    job1.buttonText = @"Hit the Road";
+    job1.statusCode = 3;
     
     Job *job2 = [[Job alloc] init];
     job2.customerId = 2;
-    job2.customerName = @"Name 2";
-    job2.price = @"200.00";
-    job2.status = @"started";
-    job2.deadline = [NSDate date];
+    job2.customerName = @"Michael Smith";
+    job2.address1 = @"8 Octavia Street";
+    job2.address2 = @"San Francisco, CA 94102";
+    job2.phone = @"415-708-8885";
     job2.task = @"Toliet";
-    
+    job2.price = @"$210.00";
+    job2.status = @"Appt This Afternoon";
+    job2.buttonText = @"";
+    job2.statusCode = 3;
     
     Job *job3 = [[Job alloc] init];
     job3.customerId = 3;
-    job3.customerName = @"Name 3";
-    job3.price = @"300.00";
-    job3.status = @"finished";
-    job3.deadline = [NSDate date];
-    job3.task = @"Shower clogged";
+    job3.customerName = @"Michelle Williams";
+    job3.address1 = @"8 Octavia Street";
+    job3.address2 = @"San Francisco, CA 94102";
+    job3.phone = @"415-708-8885";
+    job3.task = @"Shower Clogged Boo";
+    job3.price = @"$311.00";
+    job3.status = @"Inspection on Sept 3";
+    job3.buttonText = @"";
+    job3.statusCode = 0;
+    
+    Job *job4 = [[Job alloc] init];
+    job4.customerId = 3;
+    job4.customerName = @"Doug Neilsen";
+    job4.address1 = @"440 N Wolfe st";
+    job4.address2 = @"Sunnyvale, CA 94085";
+    job4.phone = @"415-708-8885";
+    job4.task = @"Shower Clogged Boo";
+    job4.price = @"$726.00";
+    job4.status = @"Inspection on Sept 3";
+    job4.buttonText = @"";
+    
+    Job *job5 = [[Job alloc] init];
+    job5.customerId = 3;
+    job5.customerName = @"Dan Martin";
+    job5.address1 = @"440 N Wolfe st";
+    job5.address2 = @"Sunnyvale, CA 94085";
+    job5.phone = @"415-708-8885";
+    job5.task = @"Shower Clogged Boo";
+    job5.price = @"$726.00";
+    job5.status = @"Quote Given";
+    job5.buttonText = @"";
+    
+    Job *job6 = [[Job alloc] init];
+    job6.customerId = 3;
+    job6.customerName = @"Craig Hodnett";
+    job6.address1 = @"440 N Wolfe st";
+    job6.address2 = @"Sunnyvale, CA 94085";
+    job6.phone = @"415-708-8885";
+    job6.task = @"Shower Clogged Boo";
+    job6.price = @"$726.00";
+    job6.status = @"Billed on Aug 24";
+    job6.buttonText = @"";
     
     [self.objects addObject:job1];
     [self.objects addObject:job2];
     [self.objects addObject:job3];
+    [self.objects addObject:job4];
+    [self.objects addObject:job5];
+    [self.objects addObject:job6];
     [self.tableView reloadData];
     
     self.detailViewController = (DetailViewController *)[self.splitViewController.viewControllers lastObject];
@@ -131,7 +177,6 @@
 {
     [self setDisconnectState];
     [[[MyPubNub shared] pubnub] removeListener:self];
-   // [[NSNotificationCenter defaultCenter] postNotificationName:LVPubNubDisconnected object:nil];
 }
 
 
@@ -214,12 +259,17 @@
     NSNumber *customerId = [messageObject objectForKey:@"customerId"];
     NSString *status = [messageObject objectForKey:@"status"];
     
-    for (Job* j in self.objects) {
-        if ([j customerId] == [customerId integerValue]) {
-            j.status = status;
-            break;
-        }
-    }
+    
+    Job *j = [self.objects objectAtIndex:0];
+    j.statusCode = j.statusCode++;
+    j.status = @"Yay! Another happy customer!";
+    
+//    for (Job* j in self.objects) {
+//        if ([j customerId] == [customerId integerValue]) {
+//            j.status = status;
+//            break;
+//        }
+//    }
     
     [self.tableView reloadData];
 }
@@ -269,13 +319,8 @@
     
     cell.customerNameLabel.text = [object customerName];
     cell.statusLabel.text = [object status];
-    cell.deadlineLabel.text = @"Today";
     cell.priceLabel.text = [object price];
-    /*
-    PrototypeTableViewCell *cell = (PrototypeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"PrototypeTableViewCell" forIndexPath:indexPath];
     
-    cell.titleLabel.text = [object customerName];
-    */
     return cell;
 }
 
@@ -296,7 +341,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 124;
+    return 90;
 }
 
 @end

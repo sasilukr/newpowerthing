@@ -13,6 +13,6 @@
 @property (nonatomic, weak) IBOutlet UILabel *customerNameLabel;
 @property (nonatomic, weak) IBOutlet UILabel *priceLabel;
 @property (nonatomic, weak) IBOutlet UILabel *statusLabel;
-@property (strong, nonatomic) IBOutlet UILabel *deadlineLabel;
+// @property (strong, nonatomic) IBOutlet UILabel *deadlineLabel;
 
 @end

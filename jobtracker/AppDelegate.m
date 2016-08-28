@@ -72,42 +72,17 @@
     NSLog(@"%s with error: %@", __PRETTY_FUNCTION__, error);
 }
 
-//- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-//{
-//    
-//    const unsigned *tokenBytes = [deviceToken bytes];
-//    NSString *hexToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
-//                          ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
-//                          ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
-//                          ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
-//    self.devicePushToken = [hexToken length] ? hexToken : @"unknownDeviceToken";
-//    
-////    DLog(@"%s - devicePushToken %@", __FUNCTION__, self.devicePushToken);
-//    
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        NSLog(@" ##############  didRegisterForRemoteNotificationsWithDeviceToken ##############");
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"ApplicationDidReceiveDeviceTokenEvent" object:nil];
-//    });
-//}
-//
-//- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-//{
-//    
-//    self.devicePushToken = @"unknownDeviceToken";
-//    
-//}
-
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
     // When app is in the foreground and we get a remote push.
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ApplicationDidReceiveRemoteNotification" object:nil];
-
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Payment is received!"                                                        message:@"Wooooooooot"
-                                                       delegate:self
-                                              cancelButtonTitle:nil
-                                              otherButtonTitles:NSLocalizedString(@"Button.OK", nil), nil];
-    [alertView show];
+    NSLog(@"remote notification");
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"ApplicationDidReceiveRemoteNotification" object:nil];
+//
+//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Payment is received!"                                                        message:@"Wooooooooot"
+//                                                       delegate:self
+//                                              cancelButtonTitle:nil
+//                                              otherButtonTitles:NSLocalizedString(@"Button.OK", nil), nil];
+//    [alertView show];
     
 }
 
